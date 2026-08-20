@@ -1,0 +1,32 @@
+# Pipeline configuration. Paths relative to the repo root.
+
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  artifacts_dir: data/artifacts
+  hillstrom_urls:
+    - "https://www.minethatdata.com/Kevin_Hillstrom_MineThatData_E-MailAnalytics_DataMiningChallenge_2008.03.20.csv"
+    - "http://www.minethatdata.com/Kevin_Hillstrom_MineThatData_E-MailAnalytics_DataMiningChallenge_2008.03.20.csv"
+  # Which treatment arm to compare against control ("no e-mail").
+  treatment_arm: "Womens E-Mail"
+  outcome: "visit"          # visit | conversion | spend
+  test_frac: 0.35
+  random_state: 42
+
+training:
+  experiment_name: causalift
+  n_splits: 5               # cross-fitting folds for OOF uplift
+  lgbm:
+    n_estimators: 300
+    learning_rate: 0.05
+    num_leaves: 31
+    min_child_samples: 50
+    verbose: -1
+
+evaluation:
+  n_bootstrap: 200
+  deciles: 10
+
+policy:
+  margin_per_conversion: 25.0   # profit per incremental visit/conversion
+  cost_per_contact: 0.10        # cost of sending one e-mail
